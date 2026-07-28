@@ -1,4 +1,5 @@
 import express, { type Express } from "express";
+import { dirname } from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
@@ -52,5 +53,19 @@ app.use(
 );
 
 app.use("/api", router);
+
+// Serve built frontend in production (e.g. Wispbyte).
+// In Replit dev mode the dist folder won't exist, so this is skipped automatically.
+import { existsSync } from "fs";
+import { join } from "path";
+import { fileURLToPath } from "url";
+const __appdir = dirname(fileURLToPath(import.meta.url));
+const frontendDist = join(__appdir, "../../golustore/dist/public");
+if (existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get("*", (_req, res) => {
+    res.sendFile(join(frontendDist, "index.html"));
+  });
+}
 
 export default app;

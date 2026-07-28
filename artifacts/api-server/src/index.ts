@@ -1,3 +1,12 @@
+import { config } from "dotenv";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+// Load config.env from workspace root (used when deployed on external hosts like Wispbyte).
+// On Replit, env vars are injected directly and this file won't exist — dotenv skips silently.
+const __dirname = dirname(fileURLToPath(import.meta.url));
+config({ path: resolve(__dirname, "../../../config.env") });
+
 import app from "./app";
 import { logger } from "./lib/logger";
 
