@@ -1,0 +1,2 @@
+zipFile.zip filter=lfs diff=lfs merge=lfs -text
+golubazaar-source.tar.gz filter=lfs diff=lfs merge=lfs -text

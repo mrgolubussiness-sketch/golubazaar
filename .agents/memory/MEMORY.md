@@ -1,0 +1,1 @@
+- [Clerk dev setup](clerk-dev-setup.md) — publishableKeyFromHost breaks in dev; use VITE_CLERK_PUBLISHABLE_KEY directly when no proxy URL is set

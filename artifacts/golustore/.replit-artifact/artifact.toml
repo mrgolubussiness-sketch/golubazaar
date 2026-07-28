@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "GoluStore"
+version = "1.0.0"
+id = "artifacts/golustore"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25722
+
+[services.development]
+run = "pnpm --filter @workspace/golustore run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/golustore", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/golustore/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25722"
+BASE_PATH = "/"
