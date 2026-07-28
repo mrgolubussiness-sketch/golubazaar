@@ -1,57 +1,51 @@
-# GoluBazaar
+# GoluStore (GoluBazaar)
 
-A full-stack e-commerce storefront for premium digital goods (game accounts, OTT subscriptions, Discord upgrades). Built as a pnpm monorepo.
+A full-stack e-commerce web app for selling premium digital services (game accounts, OTT subscriptions, Discord upgrades, etc.).
 
-## Architecture
+## Stack
 
-| Package | Path | Purpose |
-|---|---|---|
-| `@workspace/golustore` | `artifacts/golustore` | React + Vite storefront (public + admin) |
-| `@workspace/api-server` | `artifacts/api-server` | Express 5 REST API |
-| `@workspace/db` | `lib/db` | Drizzle ORM + PostgreSQL schema |
-| `@workspace/api-zod` | `lib/api-zod` | Zod validation schemas (generated) |
-| `@workspace/api-client-react` | `lib/api-client-react` | React Query hooks (generated from OpenAPI spec) |
-| `@workspace/api-spec` | `lib/api-spec` | OpenAPI spec + Orval codegen config |
+- **Frontend** (`artifacts/golustore`): React + Vite + Tailwind v4 + shadcn/ui + Wouter + TanStack Query + Clerk auth
+- **API Server** (`artifacts/api-server`): Express 5 + Clerk auth middleware + Drizzle ORM
+- **Database** (`lib/db`): Replit-managed PostgreSQL via Drizzle ORM
+- **Auth**: Replit-managed Clerk (whitelabel)
+- **Shared libs**: `lib/api-spec` (OpenAPI), `lib/api-client-react` (generated client), `lib/api-zod` (Zod schemas)
 
-## Running the app
+## How to run
 
-Both services start automatically via Replit workflows:
+All three workflows are configured and start automatically:
 
-- **Frontend** (`artifacts/golustore: web`) — Vite dev server on `$PORT` (25722)
-- **API server** (`artifacts/api-server: API Server`) — Express on port 8080
+| Workflow | Command |
+|---|---|
+| `artifacts/golustore: web` | `pnpm --filter @workspace/golustore run dev` |
+| `artifacts/api-server: API Server` | `pnpm --filter @workspace/api-server run dev` |
+| `artifacts/mockup-sandbox: Component Preview Server` | `pnpm --filter @workspace/mockup-sandbox run dev` |
 
-The Vite dev server proxies `/api/*` requests to the API server at `http://localhost:8080`.
+## Required secrets
+
+| Secret | Purpose |
+|---|---|
+| `CLERK_SECRET_KEY` | Clerk server-side auth (auto-provisioned) |
+| `CLERK_PUBLISHABLE_KEY` | Clerk key (auto-provisioned) |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk key exposed to the frontend (auto-provisioned) |
+| `ADMIN_EMAIL` | Initial admin account email |
+| `ADMIN_PASSWORD` | Initial admin account password |
+| `SESSION_SECRET` | Cookie signing secret |
+| `DATABASE_URL` | PostgreSQL connection string (auto-provisioned by Replit) |
 
 ## Database
 
-Uses Replit's built-in PostgreSQL (Drizzle ORM). Schema is in `lib/db/src/schema/`.
+Schema is managed with Drizzle. To push schema changes to the dev database:
 
-To push schema changes to the database:
 ```bash
-cd lib/db && pnpm run push
+pnpm --filter @workspace/db run push
 ```
 
-## Environment variables / secrets
-
-| Variable | Where set | Purpose |
-|---|---|---|
-| `DATABASE_URL` | Replit built-in (auto) | PostgreSQL connection string |
-| `SESSION_SECRET` | Replit Secrets | Cookie signing for admin sessions |
-| `PORT` | Replit artifact config (auto) | Per-service port |
-| `BASE_PATH` | Replit artifact config (auto) | URL base path for Vite |
+Tables: `products`, `categories`, `orders`, `coupons`, `reviews`, `faq`, `store_settings`, `admin_credentials`.
 
 ## Admin panel
 
-The admin panel lives at a secret path: `/golustore-control`  
-(Not linked anywhere on the public site.)
-
-## Code generation
-
-API client hooks and Zod schemas are generated from `lib/api-spec/openapi.yaml` using Orval:
-```bash
-cd lib/api-spec && pnpm run generate
-```
+Available at `/golustore-control`. Log in with the `ADMIN_EMAIL` / `ADMIN_PASSWORD` credentials set as secrets.
 
 ## User preferences
 
-<!-- Agent: add user preferences here when asked to remember something -->
+_None recorded yet._
