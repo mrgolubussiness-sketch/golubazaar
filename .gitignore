@@ -44,9 +44,15 @@ Thumbs.db
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 
-# Replit
+# Replit — exclude from git/zip
 .cache/
 .local/
+.agents/
+.replit
+.replitignore
+.replit-artifact
+artifacts/**/.replit-artifact
+attached_assets/
 
 # Local secrets — never commit this
 config.env
