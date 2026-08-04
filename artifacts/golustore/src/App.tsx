@@ -206,27 +206,27 @@ function ClerkProviderWithPublicApp() {
   );
 }
 
-// ─── Root: decides admin vs public ───────────────────────────────────────────
+// --- Root: decides admin vs public ───────────────────────────────────────────
 function InnerApp() {
   const [location] = useLocation();
-  const isAdmin = location.startsWith("/golustore-control");
+  const isAdmin = location.startsWith(ADMIN);
   if (isAdmin) return <AdminApp />;
-      return <ClerkProviderWithPublicApp />;
+  return <ClerkProviderWithPublicApp />;
 }
 
-class GlobalErrorBoundary extends import("react").Component<{children: import("react").ReactNode}, {hasError: boolean, error: any}> {
+class GlobalErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   state = { hasError: false, error: null };
   static getDerivedStateFromError(error: any) { return { hasError: true, error }; }
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ background: "#ffefef", color: "#b71c1c", padding: "30px", fontFamily: "sans-serif", minHeight: "100vh" }}>
-          <h2 style={{ fontWeight: "900" }}>⚠️ Golu Bazaar Render Error</h2>
+        <div style={{ background: "#fff5f5", color: "#c53030", padding: "40px", fontFamily: "sans-serif", minHeight: "100vh", textAlign: "center" }}>
+          <h2 style={{ fontWeight: "900", fontSize: "24px" }}>⚠️ Golu Bazaar Render Error</h2>
           <p>A frontend page component crashed while loading your store data:</p>
-          <pre style={{ background: "#fff", padding: "15px", border: "1px solid #d32f2f", borderRadius: "6px", overflowX: "auto", color: "#000" }}>
+          <pre style={{ background: "#fff", padding: "15px", border: "1px solid #feb2b2", borderRadius: "6px", overflowX: "auto", color: "#2d3748", textAlign: "left", maxWidth: "600px", margin: "20px auto" }}>
             {this.state.error?.stack || this.state.error?.toString()}
           </pre>
-          <p style={{ color: "#555", fontSize: "14px" }}>This usually happens when the frontend tries to display products but the backend API is unreachable or sending an invalid response.</p>
+          <p style={{ color: "#718096", fontSize: "14px" }}>This happens if a component tries to read properties that are missing from your backend server payload streams.</p>
         </div>
       );
     }
@@ -247,5 +247,3 @@ function App() {
 }
 
 export default App;
-
-  
