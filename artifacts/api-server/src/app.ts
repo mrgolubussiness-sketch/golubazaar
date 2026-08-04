@@ -59,7 +59,7 @@ app.use(
     ),
   })),
 );
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
   res.send('🚀 Golu Bazaar API Server is Active and Running!');
 });
 
@@ -74,7 +74,7 @@ const __appdir = dirname(fileURLToPath(import.meta.url));
 const frontendDist = join(__appdir, "../../golustore/dist/public");
 if (existsSync(frontendDist)) {
   app.use(express.static(frontendDist));
-app.get("/*", (req, res) => {
+app.get("/:catchall(*)", (req, res) => {
   res.sendFile(join(frontendDist, "index.html"));
 });
 }
