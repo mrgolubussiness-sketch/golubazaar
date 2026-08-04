@@ -1,10 +1,9 @@
 [build]
 builder = "NIXPACKS"
-# We add serve as a local project dependency instead of a global one to bypass the security wall
 buildCommand = "pnpm install --no-frozen-lockfile && pnpm add -w serve && pnpm --filter @workspace/golustore run build"
 
 [deploy]
-# Points straight to your built static files using our local package execution path
-startCommand = "pnpm exec serve -s artifacts/golustore/dist -l $PORT"
+# Points strictly into the subfolder where your real entry assets live
+startCommand = "pnpm exec serve -s artifacts/golustore/dist/public -l $PORT"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
