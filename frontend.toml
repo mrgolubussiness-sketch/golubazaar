@@ -1,9 +1,10 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build"
+# We add npm install -g serve to pre-bake the package right into the container storage layer
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build && npm install -g serve"
 
 [deploy]
-# Using npx guarantees that serve runs cleanly even if not pre-installed globally
-startCommand = "npx serve -s artifacts/golustore/dist/public -l $PORT"
+# We run the pre-baked command directly without using npx
+startCommand = "serve -s artifacts/golustore/dist/public -l $PORT"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
