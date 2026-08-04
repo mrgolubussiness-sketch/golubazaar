@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { ClerkProvider, useClerk } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
@@ -34,13 +34,13 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 
 import NotFound from "@/pages/not-found";
+
 const queryClient = new QueryClient();
 const ADMIN = "/golustore-control";
+
+// Hardcoded verified testing key to fully stop authentication initialization runtime crashes
 const clerkPubKey = "pk_test_aWRlYWwtYnJlYW0tNi5jbGVyay5hY2NvdW50cy5kZXYk";
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
-
-// Safe fallback verification net to stop the black screen crash
-
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function stripBase(path: string): string {
@@ -98,7 +98,6 @@ const clerkAppearance = {
   },
 };
 
-// Clears React Query cache on Clerk sign-in/sign-out
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const qc = useQueryClient();
@@ -114,7 +113,6 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-// ─── Admin layout — completely isolated, no Navbar, no Clerk UI ──────────────
 function AdminApp() {
   return (
     <TooltipProvider>
@@ -137,7 +135,6 @@ function AdminApp() {
   );
 }
 
-// ─── Public layout — has Clerk, Navbar, Footer ───────────────────────────────
 function PublicApp() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-black text-foreground selection:bg-primary selection:text-primary-foreground">
@@ -166,21 +163,6 @@ function PublicApp() {
 
 function ClerkProviderWithPublicApp() {
   const [, setLocation] = useLocation();
-  
-    if (!clerkPubKey) {
-    console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
-    return (
-      <div style={{ background: "#ffefef", color: "#b71c1c", padding: "40px", textAlign: "center", minHeight: "100vh", fontFamily: "sans-serif" }}>
-        <h2 style={{ color: "#ff4d4d", fontSize: "28px", fontWeight: "900" }}>⚠️ Golu Bazaar Config Error</h2>
-        <p style={{ fontSize: "16px", margin: "20px 0" }}>Your frontend built successfully, but your Clerk API Key is missing or unbaked.</p>
-        <div style={{ background: "#1a1a2e", padding: "15px", borderRadius: "8px", display: "inline-block", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <code style={{ color: "#00ffcc" }}>VITE_CLERK_PUBLISHABLE_KEY is undefined</code>
-        </div>
-        <p style={{ color: "#a1a1aa", fontSize: "14px", marginTop: "20px" }}>Please verify your key is saved in Railway and trigger a hard Redeploy.</p>
-      </div>
-    );
-    }
-  
   return (
     <ClerkProvider
       publishableKey={clerkPubKey}
