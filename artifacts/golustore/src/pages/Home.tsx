@@ -22,9 +22,13 @@ export default function Home() {
     description: "Buy gaming accounts, OTT subscriptions & Discord upgrades instantly. Verified, safe, delivered via Discord."
   });
 
-  // Completely guarantees that if products data contains errors or missing arrays, it defaults to a safe blank list
-  const u = Array.isArray(featuredProductsData) ? featuredProductsData : [];
-  const featuredProducts = u;
+    const { data: featuredProductsData } = useListFeaturedProducts();
+  const { data: categoriesData } = useListCategories();
+  const { data: stats } = useGetStoreStats();
+
+ const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
+ const categories = Array.isArray(categoriesData) ? categoriesData : [];
+  
   return (
     <div className="flex flex-col min-h-screen">
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
