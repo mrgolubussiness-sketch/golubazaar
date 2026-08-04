@@ -3,7 +3,8 @@ builder = "NIXPACKS"
 buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build"
 
 [deploy]
-# Pointed exactly inside your nested build workspace folder path
+# Instructs serve to look directly inside the built public asset folder
 startCommand = "npx serve -s artifacts/golustore/dist/public -l $PORT"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
+
