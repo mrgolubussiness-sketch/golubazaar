@@ -1,9 +1,11 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/db push --force && pnpm --filter @workspace/api-server run build"
+# Cleaned build phase (Assembles core application logic safely)
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build"
 
 [deploy]
-startCommand = "PORT=8080 node artifacts/api-server/dist/index.mjs"
+# Safe deploy execution (Applies drizzle schema updates to Neon right before launching the server)
+startCommand = "pnpm --filter @workspace/db push --force && PORT=8080 node artifacts/api-server/dist/index.mjs"
 healthcheckPath = "/api/healthz"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
