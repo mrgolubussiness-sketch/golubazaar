@@ -14,7 +14,7 @@ export default function AdminLogin() {
     mutation: {
       onSuccess: () => {
         toast({ title: "Access Granted", description: "Welcome to the command center." });
-        setLocation("/golustore-control/dashboard");
+        window.location.href = "/golustore-control/dashboard";
       },
       onError: (err: any) => {
         const msg = err?.response?.data?.error ?? "Invalid email or password.";
