@@ -1,8 +1,11 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build --base ./"
+# We install serve globally right inside the container image so it is pre-cached
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build --base ./ && npm install -g serve"
 
 [deploy]
-startCommand = "npx serve -s artifacts/golustore/dist/public -l $PORT"
+# We drop npx completely and run the cached binary directly
+startCommand = "serve -s artifacts/golustore/dist/public -l $PORT"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
+
