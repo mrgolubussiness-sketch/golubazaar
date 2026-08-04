@@ -176,7 +176,7 @@ router.post("/admin/products", requireAdmin, async (req, res): Promise<void> => 
   res.status(201).json(AdminCreateProductResponse.parse({ ...product, createdAt: product.createdAt.toISOString() }));
 });
 
-router.patch("/admin/products/:id", requireAdmin, async (req, res): Promise<void> => {
+router.patch("/admin/products/:id", requireAdmin, async (req, res) => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const params = AdminUpdateProductParams.safeParse({ id: parseInt(raw, 10) });
   if (!params.success) { res.status(400).json({ error: params.error.message }); return; }
