@@ -63,7 +63,7 @@ const __appdir = dirname(fileURLToPath(import.meta.url));
 const frontendDist = join(__appdir, "../../golustore/dist/public");
 if (existsSync(frontendDist)) {
   app.use(express.static(frontendDist));
-  app.get("*", (_req, res) => {
+  app.get("(.*)", (_req, res) => {
     res.sendFile(join(frontendDist, "index.html"));
   });
 }
