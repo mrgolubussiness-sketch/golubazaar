@@ -195,26 +195,31 @@ function InnerApp() {
   if (isAdmin) return <AdminApp />;
   return <ClerkProviderWithPublicApp />;
 }
-
-class GlobalErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
+ class GlobalErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   state = { hasError: false, error: null };
   static getDerivedStateFromError(error: any) { return { hasError: true, error }; }
   render() {
     if (this.state.hasError) {
       return (
         <div style={{ background: "#fff5f5", color: "#c53030", padding: "40px", fontFamily: "sans-serif", minHeight: "100vh", textAlign: "center" }}>
-          <h2 style={{ fontWeight: "900", fontSize: "24px" }}>⚠️ Golu Bazaar Render Error</h2>
-          <p>A frontend page component crashed while loading your store data:</p>
-          <pre style={{ background: "#fff", padding: "15px", border: "1px solid #feb2b2", borderRadius: "6px", overflowX: "auto", color: "#2d3748", textAlign: "left", maxWidth: "600px", margin: "20px auto" }}>
-            {this.state.error?.stack || this.state.error?.toString()}
-          </pre>
-          <p style={{ color: "#718096", fontSize: "14px" }}>This happens if a component tries to read properties that are missing from your backend server payload streams.</p>
+          <h2 style={{ fontWeight: "900", fontSize: "24px" }}>⚠️ Golu Bazaar API Payload Analysis</h2>
+          <p>The application crashed because the backend sent an unexpected layout data structure:</p>
+          
+          <div style={{ textAlign: "left", maxWidth: "600px", margin: "20px auto", background: "#2d3748", color: "#fff", padding: "20px", borderRadius: "8px" }}>
+            <h4 style={{ margin: "0 0 10px 0", color: "#ff4d4d" }}>🔴 Runtime Crash Error:</h4>
+            <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>{this.state.error?.toString()}</pre>
+          </div>
+
+          <p style={{ color: "#718096", fontSize: "14px" }}>
+            This occurs when your database collections are uninitialized. 
+            Please open your database tool or dashboard to verify that your <b>Products</b> and <b>Categories</b> tables exist and contain valid entry arrays.
+          </p>
         </div>
       );
     }
     return this.props.children;
   }
-}
+ }
 
 function App() {
   return (
