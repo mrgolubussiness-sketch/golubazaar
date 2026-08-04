@@ -27,7 +27,7 @@ export default function AdminLogin() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    login.mutate({ data: { email, password } });
+    login.mutate({ email, password });
   };
 
   return (
