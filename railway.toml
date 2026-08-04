@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install && pnpm --filter @workspace/golustore run build && pnpm --filter @workspace/api-server run build"
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build && pnpm --filter @workspace/api-server run build"
 
 [deploy]
 startCommand = "pnpm --filter @workspace/db push --force && node artifacts/api-server/dist/index.mjs"
