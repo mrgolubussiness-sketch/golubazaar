@@ -171,7 +171,7 @@ function ClerkProviderWithPublicApp() {
     if (!clerkPubKey) {
     console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
     return (
-      <div style={{ background: "#0c0c14", color: "#fff", padding: "40px", textAlign: "center", minHeight: "100vh", fontFamily: "sans-serif" }}>
+      <div style={{ background: "#ffefef", color: "#b71c1c", padding: "40px", textAlign: "center", minHeight: "100vh", fontFamily: "sans-serif" }}>
         <h2 style={{ color: "#ff4d4d", fontSize: "28px", fontWeight: "900" }}>⚠️ Golu Bazaar Config Error</h2>
         <p style={{ fontSize: "16px", margin: "20px 0" }}>Your frontend built successfully, but your Clerk API Key is missing or unbaked.</p>
         <div style={{ background: "#1a1a2e", padding: "15px", borderRadius: "8px", display: "inline-block", border: "1px solid rgba(255,255,255,0.1)" }}>
