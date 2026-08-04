@@ -211,17 +211,41 @@ function InnerApp() {
   const [location] = useLocation();
   const isAdmin = location.startsWith("/golustore-control");
   if (isAdmin) return <AdminApp />;
-  return <ClerkProviderWithPublicApp />;
+      return <ClerkProviderWithPublicApp />;
+}
+
+class GlobalErrorBoundary extends import("react").Component<{children: import("react").ReactNode}, {hasError: boolean, error: any}> {
+  state = { hasError: false, error: null };
+  static getDerivedStateFromError(error: any) { return { hasError: true, error }; }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ background: "#ffefef", color: "#b71c1c", padding: "30px", fontFamily: "sans-serif", minHeight: "100vh" }}>
+          <h2 style={{ fontWeight: "900" }}>⚠️ Golu Bazaar Render Error</h2>
+          <p>A frontend page component crashed while loading your store data:</p>
+          <pre style={{ background: "#fff", padding: "15px", border: "1px solid #d32f2f", borderRadius: "6px", overflowX: "auto", color: "#000" }}>
+            {this.state.error?.stack || this.state.error?.toString()}
+          </pre>
+          <p style={{ color: "#555", fontSize: "14px" }}>This usually happens when the frontend tries to display products but the backend API is unreachable or sending an invalid response.</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 function App() {
   return (
-    <WouterRouter base={basePath}>
-      <QueryClientProvider client={queryClient}>
-        <InnerApp />
-      </QueryClientProvider>
-    </WouterRouter>
+    <GlobalErrorBoundary>
+      <WouterRouter base={basePath}>
+        <QueryClientProvider client={queryClient}>
+          <InnerApp />
+        </QueryClientProvider>
+      </WouterRouter>
+    </GlobalErrorBoundary>
   );
 }
 
 export default App;
+
+  
