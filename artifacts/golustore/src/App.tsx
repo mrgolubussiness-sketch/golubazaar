@@ -49,7 +49,17 @@ const clerkPubKey = clerkProxyUrl
       window.location.hostname,
       import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
     )
-  : import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+  // Safe fallback verification net to stop the black screen crash
+if (!clerkPubKey) {
+  console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
+  return (
+    <div style={{ background: "#000", color: "#fff", padding: "40px", textAlign: "center", fontFamily: "sans-serif" }}>
+      <h2 style={{ color: "#ff4d4d" }}>⚠️ Authentication Initialization Error</h2>
+      <p>Your storefront loaded successfully, but your Clerk API Key is missing inside the environment variables.</p>
+      <p style={{ color: "#a1a1aa", fontSize: "14px" }}>Please check your Railway variables panel for VITE_CLERK_PUBLISHABLE_KEY.</p>
+    </div>
+  );
+}
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function stripBase(path: string): string {
@@ -57,8 +67,6 @@ function stripBase(path: string): string {
     ? path.slice(basePath.length) || "/"
     : path;
 }
-
-if (!clerkPubKey) throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY");
 
 const clerkAppearance = {
   theme: shadcn,
