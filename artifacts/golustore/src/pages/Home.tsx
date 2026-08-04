@@ -22,8 +22,14 @@ export default function Home() {
     description: "Buy gaming accounts, OTT subscriptions & Discord upgrades instantly. Verified, safe, delivered via Discord.",
   });
 
-  const { data: featuredProducts, isLoading: isLoadingFeatured } = useListFeaturedProducts();
-  const { data: categories } = useListCategories();
+  const { data: featuredProductsData, isLoading: isLoadingFeatured } = useListFeaturedProducts();
+  const { data: categoriesData } = useListCategories();
+  const { data: stats } = useGetStoreStats();
+
+  // Enforces a safe fallback empty list array if the database collection is empty
+  const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
+  const categories = Array.isArray(categoriesData) ? categoriesData : [];
+  
   const { data: stats } = useGetStoreStats();
 
   return (
