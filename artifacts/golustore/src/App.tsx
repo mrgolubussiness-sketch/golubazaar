@@ -226,7 +226,7 @@ function InnerApp() {
 function App() {
   return (
     <GlobalErrorBoundary>
-      <WouterRouter base={basePath}>
+      <WouterRouter>
         <QueryClientProvider client={queryClient}>
           <InnerApp />
         </QueryClientProvider>
