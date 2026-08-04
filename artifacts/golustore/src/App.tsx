@@ -41,7 +41,6 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 
 // Safe fallback verification net to stop the black screen crash
-if (!clerkPubKey) console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -168,6 +167,21 @@ function PublicApp() {
 
 function ClerkProviderWithPublicApp() {
   const [, setLocation] = useLocation();
+  
+    if (!clerkPubKey) {
+    console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
+    return (
+      <div style={{ background: "#0c0c14", color: "#fff", padding: "40px", textAlign: "center", minHeight: "100vh", fontFamily: "sans-serif" }}>
+        <h2 style={{ color: "#ff4d4d", fontSize: "28px", fontWeight: "900" }}>⚠️ Golu Bazaar Config Error</h2>
+        <p style={{ fontSize: "16px", margin: "20px 0" }}>Your frontend built successfully, but your Clerk API Key is missing or unbaked.</p>
+        <div style={{ background: "#1a1a2e", padding: "15px", borderRadius: "8px", display: "inline-block", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <code style={{ color: "#00ffcc" }}>VITE_CLERK_PUBLISHABLE_KEY is undefined</code>
+        </div>
+        <p style={{ color: "#a1a1aa", fontSize: "14px", marginTop: "20px" }}>Please verify your key is saved in Railway and trigger a hard Redeploy.</p>
+      </div>
+    );
+    }
+  
   return (
     <ClerkProvider
       publishableKey={clerkPubKey}
