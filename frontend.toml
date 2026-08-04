@@ -1,0 +1,7 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build"
+
+[deploy]
+startCommand = "pnpm --filter @workspace/golustore run start"
+
