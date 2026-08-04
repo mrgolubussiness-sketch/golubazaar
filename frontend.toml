@@ -1,10 +1,11 @@
 [build]
 builder = "NIXPACKS"
-# Force Vite to compile assets relative to the current folder instead of absolute root links
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore exec vite build --base ./"
+# The --base ./ flag forces Vite to search inside its local compiled folders for asset bundles
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build --base ./"
 
 [deploy]
-# Points strictly to the build folder output
-startCommand = "npx serve -s artifacts/golustore/dist -l $PORT"
+# Points cleanly inside your active compiled static UI package asset tree
+startCommand = "npx serve -s artifacts/golustore/dist/public -l $PORT"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
+
