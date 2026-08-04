@@ -1,11 +1,10 @@
 [build]
 builder = "NIXPACKS"
-# Cleaned build phase (Assembles core application logic safely)
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build"
+# This bakes the key directly into Vite's environment compilation process
+buildCommand = "pnpm install --no-frozen-lockfile && VITE_CLERK_PUBLISHABLE_KEY=pk_live_YOUR_ACTUAL_CLERK_KEY_HERE pnpm --filter @workspace/golustore run build && pnpm --filter @workspace/api-server run build"
 
 [deploy]
-# Safe deploy execution (Applies drizzle schema updates to Neon right before launching the server)
-startCommand = "pnpm --filter @workspace/db push --force && PORT=8080 node artifacts/api-server/dist/index.mjs"
+startCommand = "PORT=8080 node artifacts/api-server/dist/index.mjs"
 healthcheckPath = "/api/healthz"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
