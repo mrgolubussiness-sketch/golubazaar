@@ -26,9 +26,9 @@ export default function Home() {
   const { data: categoriesData } = useListCategories();
   const { data: stats } = useGetStoreStats();
 
- const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
- const categories = Array.isArray(categoriesData) ? categoriesData : [];
-  
+  const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
+  const categories = Array.isArray(categoriesData) ? categoriesData : [];
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
