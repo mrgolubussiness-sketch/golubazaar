@@ -118,12 +118,12 @@ router.post("/admin/login", async (req, res): Promise<void> => {
     .set({ failedAttempts: 0, lockedUntil: null })
     .where(eq(adminCredentialsTable.id, cred.id));
 
-  res.cookie(SESSION_COOKIE, "authenticated", {
-    signed: true,
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: "lax",
-  });
+      res.cookie(SESSION_COOKIE, "authenticated", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
 
   res.json(AdminLoginResponse.parse({ authenticated: true }));
 });
