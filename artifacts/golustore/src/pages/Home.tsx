@@ -29,8 +29,6 @@ export default function Home() {
   // Enforces a safe fallback empty list array if the database collection is empty
   const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
   const categories = Array.isArray(categoriesData) ? categoriesData : [];
-  
-  const { data: stats } = useGetStoreStats();
 
   return (
     <div className="flex flex-col min-h-screen">
