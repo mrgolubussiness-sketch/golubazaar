@@ -51,6 +51,9 @@ app.use(
     ),
   })),
 );
+app.get('/', (req, res) => {
+  res.send('🚀 Golu Bazaar API Server is Active and Running!');
+});
 
 app.use("/api", router);
 
