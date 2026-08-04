@@ -41,14 +41,8 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 
 // Safe fallback verification net to stop the black screen crash
-if (!clerkPubKey) {
-  console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
-  return (
-    <div style={{ background: "#000", color: "#fff", padding: "40px", textAlign: "center", fontFamily: "sans-serif" }}>
-      <p style={{ color: "#a1a1aa", fontSize: "14px" }}>Please check your Railway variables panel for VITE_CLERK_PUBLISHABLE_KEY.</p>
-    </div>
-  );
-}
+if (!clerkPubKey) console.error("Missing VITE_CLERK_PUBLISHABLE_KEY");
+
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function stripBase(path: string): string {
