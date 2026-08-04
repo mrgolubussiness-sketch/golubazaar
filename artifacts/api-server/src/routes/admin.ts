@@ -214,7 +214,12 @@ router.delete("/admin/products/:id", requireAdmin, async (req, res): Promise<voi
 
   const [product] = await db.delete(productsTable).where(eq(productsTable.id, params.data.id)).returning();
   if (!product) { res.status(404).json({ error: "Product not found" }); return; }
-  res.sendStatus(204);
+    res.sendStatus(204);
+});
+
+router.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
 });
 
 export default router;
+
