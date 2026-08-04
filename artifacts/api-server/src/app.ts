@@ -59,15 +59,29 @@ app.use(
     ),
   })),
 );
-// Links your login form straight to the dashboard environment variables you just added
-app.get('/api/admin/init-db-account', async (req, res) => {
-  try {
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.ADMIN_MAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
-    res.send(`🚀 Backend sync active! Listening for variables. Email loaded: ${adminEmail ? "✅ YES" : "❌ NO"}`);
-  } catch (err: any) {
-    res.status(500).send(`❌ DB Init Failed: ${err.message}`);
+// Ultimate master override to intercept the login route and force authorization
+app.post('/api/admin/login', (req, res) => {
+  const { email, password } = req.body;
+  const envEmail = process.env.ADMIN_EMAIL || process.env.ADMIN_MAIL;
+  const envPassword = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
+
+  // If credentials match your Railway variables, force log you in instantly!
+  if (email === envEmail && password === envPassword) {
+    // Sets a placeholder user token session so the admin panel unlocks
+    return res.json({ success: true, token: "master_admin_session_token", user: { email, role: "admin" } });
   }
+  return res.status(401).json({ message: "Invalid administrator credentials" });
+});
+
+// Extra backup catch-all route handler for alternative auth paths
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+  const envEmail = process.env.ADMIN_EMAIL || process.env.ADMIN_MAIL;
+  const envPassword = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
+  if (email === envEmail && password === envPassword) {
+    return res.json({ success: true, token: "master_admin_session_token", user: { email, role: "admin" } });
+  }
+  return res.status(401).json({ message: "Invalid administrator credentials" });
 });
 
 export default app;
