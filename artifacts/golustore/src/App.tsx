@@ -36,8 +36,7 @@ import Privacy from "@/pages/Privacy";
 import NotFound from "@/pages/not-found";
 const queryClient = new QueryClient();
 const ADMIN = "/golustore-control";
-
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const clerkPubKey = "pk_test_aWRlYWwtYnJlYW0tNi5jbGVyay5hY2NvdW50cy5kZXYk";
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 
 // Safe fallback verification net to stop the black screen crash
