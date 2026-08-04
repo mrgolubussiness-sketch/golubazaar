@@ -115,23 +115,25 @@ function ClerkQueryClientCacheInvalidator() {
 
 function AdminApp() {
   return (
-    <TooltipProvider>
-      <div className="min-h-screen bg-background text-foreground">
-        <Switch>
-          <Route path={ADMIN} component={AdminLogin} />
-          <Route path={`${ADMIN}/dashboard`} component={AdminDashboard} />
-          <Route path={`${ADMIN}/settings`} component={AdminSettings} />
-          <Route path={`${ADMIN}/orders`} component={AdminOrders} />
-          <Route path={`${ADMIN}/coupons`} component={AdminCoupons} />
-          <Route path={`${ADMIN}/reviews`} component={AdminReviews} />
-          <Route path={`${ADMIN}/faq`} component={AdminFaqPage} />
-          <Route path={`${ADMIN}/products/new`} component={AdminProductForm} />
-          <Route path={`${ADMIN}/products/:id/edit`} component={AdminProductForm} />
-          <Route component={NotFound} />
-        </Switch>
-      </div>
-      <Toaster />
-    </TooltipProvider>
+    <GlobalErrorBoundary>
+      <TooltipProvider>
+        <div className="min-h-screen bg-background text-foreground">
+          <Switch>
+            <Route path={ADMIN} component={AdminLogin} />
+            <Route path={`${ADMIN}/dashboard`} component={AdminDashboard} />
+            <Route path={`${ADMIN}/settings`} component={AdminSettings} />
+            <Route path={`${ADMIN}/orders`} component={AdminOrders} />
+            <Route path={`${ADMIN}/coupons`} component={AdminCoupons} />
+            <Route path={`${ADMIN}/reviews`} component={AdminReviews} />
+            <Route path={`${ADMIN}/faq`} component={AdminFaqPage} />
+            <Route path={`${ADMIN}/products/new`} component={AdminProductForm} />
+            <Route path={`${ADMIN}/products/:id/edit`} component={AdminProductForm} />
+            <Route component={NotFound} />
+          </Switch>
+        </div>
+        <Toaster />
+      </TooltipProvider>
+    </GlobalErrorBoundary>
   );
 }
 
