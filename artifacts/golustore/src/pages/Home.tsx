@@ -19,17 +19,12 @@ const fadeUp = {
 export default function Home() {
   useMeta({
     title: "Premium Digital Gaming Marketplace",
-    description: "Buy gaming accounts, OTT subscriptions & Discord upgrades instantly. Verified, safe, delivered via Discord.",
+    description: "Buy gaming accounts, OTT subscriptions & Discord upgrades instantly. Verified, safe, delivered via Discord."
   });
 
-  const { data: featuredProductsData, isLoading: isLoadingFeatured } = useListFeaturedProducts();
-  const { data: categoriesData } = useListCategories();
-  const { data: stats } = useGetStoreStats();
-
-  // Enforces a safe fallback empty list array if the database collection is empty
-  const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
-  const categories = Array.isArray(categoriesData) ? categoriesData : [];
-
+  // Completely guarantees that if products data contains errors or missing arrays, it defaults to a safe blank list
+  const u = Array.isArray(featuredProductsData) ? featuredProductsData : [];
+  const featuredProducts = u;
   return (
     <div className="flex flex-col min-h-screen">
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
