@@ -1,7 +1,7 @@
 [build]
 builder = "NIXPACKS"
 # This bakes the key directly into Vite's environment compilation process
-buildCommand = "pnpm install --no-frozen-lockfile && VITE_CLERK_PUBLISHABLE_KEY=pk_live_YOUR_ACTUAL_CLERK_KEY_HERE pnpm --filter @workspace/golustore run build && pnpm --filter @workspace/api-server run build"
+buildCommand = "pnpm install --no-frozen-lockfile && VITE_CLERK_PUBLISHABLE_KEY=pk_test_cXVpZXQtd2Fob28tNDkuY2xlcmsuYWNjb3VudHMuZGV2JA pnpm --filter @workspace/golustore run build && pnpm --filter @workspace/api-server run build"
 
 [deploy]
 startCommand = "PORT=8080 node artifacts/api-server/dist/index.mjs"
