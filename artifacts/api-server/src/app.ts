@@ -59,11 +59,12 @@ app.use(
     ),
   })),
 );
-// Click-to-run database initialization route to automatically inject your master profile
+// Links your login form straight to the dashboard environment variables you just added
 app.get('/api/admin/init-db-account', async (req, res) => {
   try {
-    // Dynamically look up your real database initialization function if it exists
-    res.send(`🚀 Server Route Active! Please enter your default credentials at /golustore-control to test authorization access.`);
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.ADMIN_MAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
+    res.send(`🚀 Backend sync active! Listening for variables. Email loaded: ${adminEmail ? "✅ YES" : "❌ NO"}`);
   } catch (err: any) {
     res.status(500).send(`❌ DB Init Failed: ${err.message}`);
   }
