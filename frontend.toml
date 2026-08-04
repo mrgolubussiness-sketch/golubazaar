@@ -1,9 +1,9 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build && npm install -g serve"
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build"
 
 [deploy]
-# Pointing strictly to the actual build output directory folder
-startCommand = "serve -s artifacts/golustore/dist -l $PORT"
+# Using the absolute safest, standard npx tool configuration to serve raw assets safely
+startCommand = "npx serve -s artifacts/golustore/dist -l $PORT"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
