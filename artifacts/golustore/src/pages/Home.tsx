@@ -22,7 +22,7 @@ export default function Home() {
     description: "Buy gaming accounts, OTT subscriptions & Discord upgrades instantly. Verified, safe, delivered via Discord."
   });
 
-    const { data: featuredProductsData } = useListFeaturedProducts();
+  const { data: featuredProductsData, isLoading: isLoadingFeatured } = useListFeaturedProducts();
   const { data: categoriesData } = useListCategories();
   const { data: stats } = useGetStoreStats();
 
