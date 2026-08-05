@@ -115,11 +115,12 @@ router.post("/admin/login", async (req, res): Promise<void> => {
     .where(eq(adminCredentialsTable.id, cred.id));
 
       res.cookie(SESSION_COOKIE, "authenticated", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    });
+  signed: true,
+  httpOnly: true,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  sameSite: "none",  // required for cross-origin
+  secure: true,      // required when sameSite is "none"
+});
 
   res.json(AdminLoginResponse.parse({ authenticated: true }));
 });
