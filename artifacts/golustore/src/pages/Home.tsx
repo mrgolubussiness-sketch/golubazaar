@@ -29,9 +29,6 @@ export default function Home() {
     const featuredProducts = Array.isArray(featuredProductsData) ? featuredProductsData : [];
   const categories = Array.isArray(categoriesData) ? categoriesData : [];
   
-  // Safe default fallback list to completely prevent stats mapping array loop crashes
-  const safeStats = stats && Array.isArray(stats) ? stats : [];
-  const stats = safeStats;
   return (
     <div className="flex flex-col min-h-screen">
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
