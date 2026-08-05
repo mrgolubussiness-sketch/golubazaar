@@ -67,7 +67,7 @@ if (existsSync(frontendDist)) {
   app.use(express.static(frontendDist));
 
   // SPA fallback — unmatched routes return index.html for client-side routing
-  app.get("*", (_req, res) => {
+  app.get(/.*/, (_req, res) => {
     res.sendFile(resolve(frontendDist, "index.html"));
   });
 } else {
