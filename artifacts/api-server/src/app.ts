@@ -38,13 +38,11 @@ app.use(
     },
   }),
 );
-app.use(
-  cors({
-    origin: ["https://golubazaar.up.railway.app", "https://golubazaarog.up.railway.app"],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-  })
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : true;
+
+app.use(cors({ credentials: true, origin: ALLOWED_ORIGINS }));
 );
 
 app.use(express.json());
