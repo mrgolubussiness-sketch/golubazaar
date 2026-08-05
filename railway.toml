@@ -1,9 +1,9 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build"
+buildCommand = "pnpm install --no-frozen-lockfile && pnpm --filter @workspace/golustore run build && pnpm --filter @workspace/api-server run build"
 
 [deploy]
-# Explicitly forcing port 8080 so Railway knows where to route network requests
+# Single service: API server also serves the compiled frontend static files
 startCommand = "PORT=8080 node artifacts/api-server/dist/index.mjs"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
