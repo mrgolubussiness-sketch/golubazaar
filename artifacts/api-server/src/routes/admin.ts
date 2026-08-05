@@ -118,8 +118,8 @@ router.post("/admin/login", async (req, res): Promise<void> => {
   signed: true,
   httpOnly: true,
   maxAge: 7 * 24 * 60 * 60 * 1000,
-  sameSite: "none",  // required for cross-origin
-  secure: true,      // required when sameSite is "none"
+  sameSite: "none",
+secure: true,
 });
 
   res.json(AdminLoginResponse.parse({ authenticated: true }));
