@@ -23,7 +23,11 @@ function requireAdmin(_req: any, _res: any, next: any): void {
 }
 
 // ─── Auth routes ───────────────────────────────────────────────────────────
-
+router.get("/admin/env-check", (_req, res) => {
+  const e = (process.env.ADMIN_EMAIL ?? "");
+  const p = (process.env.ADMIN_PASSWORD ?? "");
+  res.json({ emailValue: e, passLength: p.length, passTrimmedLength: p.trim().length, passFirstChar: p[0] ?? "", passLastChar: p[p.length - 1] ?? "" });
+});
 router.post("/admin/login", (req, res): void => {
   const parsed = AdminLoginBody.safeParse(req.body);
   if (!parsed.success) {
