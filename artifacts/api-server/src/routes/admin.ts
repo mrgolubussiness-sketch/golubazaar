@@ -28,6 +28,22 @@ router.get("/admin/env-check", (_req, res) => {
   const p = (process.env.ADMIN_PASSWORD ?? "");
   res.json({ emailValue: e, passLength: p.length, passTrimmedLength: p.trim().length, passFirstChar: p[0] ?? "", passLastChar: p[p.length - 1] ?? "" });
 });
+router.get("/admin/magic-login", (req, res) => {
+  const key = (req.query.key as string) ?? "";
+  const adminPassword = (process.env.ADMIN_PASSWORD ?? "").trim();
+  if (!key || key.trim() !== adminPassword) {
+    res.status(401).send("Invalid key");
+    return;
+  }
+  res.cookie(SESSION_COOKIE, "authenticated", {
+    signed: true,
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: "none",
+    secure: true,
+  });
+  res.redirect("/golustore-control/dashboard");
+});
 router.post("/admin/login", (req, res): void => {
   const parsed = AdminLoginBody.safeParse(req.body);
   if (!parsed.success) {
