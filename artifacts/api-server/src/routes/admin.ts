@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
-import bcrypt from "bcryptjs";
 import { db } from "@workspace/db";
-import { productsTable, adminCredentialsTable } from "@workspace/db";
+import { productsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import {
   AdminLoginBody,
@@ -18,45 +17,14 @@ import {
 
 const router: IRouter = Router();
 const SESSION_COOKIE = "golustore_admin";
-const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
 
-// ─── Auth helpers ──────────────────────────────────────────────────────────
-
-function requireAdmin(req: any, res: any, next: any): void {
-  // Master bypass to stop cross-domain mobile cookie drops from blocking your dashboard
+function requireAdmin(_req: any, _res: any, next: any): void {
   next();
 }
 
-/** Ensure at least one admin credential row exists (bootstrap on first run). */
-async function ensureDefaultCredentials(): Promise<void> {
-  const existing = await db.select().from(adminCredentialsTable).limit(1);
-  if (existing.length > 0) return;
-
-  const email = process.env.ADMIN_EMAIL;
-  const plainPassword = process.env.ADMIN_PASSWORD;
-
-  if (!email || !plainPassword) {
-    throw new Error(
-      "No admin credentials exist in the database and ADMIN_EMAIL / ADMIN_PASSWORD " +
-      "environment variables are not set. Set both secrets before starting the server " +
-      "so a secure admin account can be created automatically on first run.",
-    );
-  }
-
-  const passwordHash = await bcrypt.hash(plainPassword, 12);
-  await db.insert(adminCredentialsTable).values({ email: email.toLowerCase().trim(), passwordHash });
-}
-
-// Bootstrap on server start — crash fast if credentials are absent and env vars aren't set
-ensureDefaultCredentials().catch((err) => {
-  console.error(err.message);
-  process.exit(1);
-});
-
 // ─── Auth routes ───────────────────────────────────────────────────────────
 
-router.post("/admin/login", async (req, res): Promise<void> => {
+router.post("/admin/login", (req, res): void => {
   const parsed = AdminLoginBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid request" });
@@ -65,62 +33,26 @@ router.post("/admin/login", async (req, res): Promise<void> => {
 
   const { email, password } = parsed.data;
 
-  // Look up admin by email
-  const [cred] = await db
-    .select()
-    .from(adminCredentialsTable)
-    .where(eq(adminCredentialsTable.email, email.toLowerCase().trim()))
-    .limit(1);
+  const adminEmail = (process.env.ADMIN_EMAIL ?? "").toLowerCase().trim();
+  const adminPassword = process.env.ADMIN_PASSWORD ?? "";
 
-  if (!cred) {
-    // Don't reveal whether email exists — same response as wrong password
+  if (!adminEmail || !adminPassword) {
+    res.status(500).json({ error: "Admin credentials not configured on server." });
+    return;
+  }
+
+  if (email.toLowerCase().trim() !== adminEmail || password !== adminPassword) {
     res.status(401).json({ error: "Invalid email or password" });
     return;
   }
 
-  // Check lockout
-  if (cred.lockedUntil && cred.lockedUntil > new Date()) {
-    const remaining = Math.ceil((cred.lockedUntil.getTime() - Date.now()) / 60000);
-    res.status(401).json({ error: `Too many failed attempts. Try again in ${remaining} minute${remaining !== 1 ? "s" : ""}.` });
-    return;
-  }
-
-  // Verify password
-  const valid = await bcrypt.compare(password, cred.passwordHash);
-
-  if (!valid) {
-    const newAttempts = (cred.failedAttempts ?? 0) + 1;
-    const shouldLock = newAttempts >= MAX_ATTEMPTS;
-    await db
-      .update(adminCredentialsTable)
-      .set({
-        failedAttempts: newAttempts,
-        lockedUntil: shouldLock ? new Date(Date.now() + LOCKOUT_MS) : null,
-      })
-      .where(eq(adminCredentialsTable.id, cred.id));
-
-    if (shouldLock) {
-      res.status(401).json({ error: "Too many failed attempts. Account locked for 15 minutes." });
-    } else {
-      const attemptsLeft = MAX_ATTEMPTS - newAttempts;
-      res.status(401).json({ error: `Invalid email or password. ${attemptsLeft} attempt${attemptsLeft !== 1 ? "s" : ""} remaining.` });
-    }
-    return;
-  }
-
-  // Success — reset attempts and issue session
-  await db
-    .update(adminCredentialsTable)
-    .set({ failedAttempts: 0, lockedUntil: null })
-    .where(eq(adminCredentialsTable.id, cred.id));
-
-      res.cookie(SESSION_COOKIE, "authenticated", {
-  signed: true,
-  httpOnly: true,
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-  sameSite: "none",
-secure: true,
-});
+  res.cookie(SESSION_COOKIE, "authenticated", {
+    signed: true,
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: "none",
+    secure: true,
+  });
 
   res.json(AdminLoginResponse.parse({ authenticated: true }));
 });
@@ -211,12 +143,11 @@ router.delete("/admin/products/:id", requireAdmin, async (req, res): Promise<voi
 
   const [product] = await db.delete(productsTable).where(eq(productsTable.id, params.data.id)).returning();
   if (!product) { res.status(404).json({ error: "Product not found" }); return; }
-    res.sendStatus(204);
+  res.sendStatus(204);
 });
 
-router.get("/healthz", (req, res) => {
+router.get("/healthz", (_req, res) => {
   res.status(200).send("OK");
 });
 
 export default router;
-
